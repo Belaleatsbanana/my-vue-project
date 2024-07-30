@@ -1,58 +1,114 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+  <div class="container">
+    <h2 class="todo-list-title">My Tasks</h2>
+    <div class="in-liner">
+      <h4>Enter a new task:</h4>
+      <div>
+        <input type="text" v-model="task" @keyup.enter="addTask">
+        <button @click="addTask">Add Task</button>
+      </div>
+    </div>
   </div>
+
+  <table class="task-table">
+    <thead>
+      <tr>
+        <th class="task-header">Task</th>
+        <th>Pending</th>
+        <th>In Progress</th>
+        <th>Done</th>
+        <th>Remove</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="(task, index) in tasks" :key="index">
+        <td>{{ task.name }}</td>
+        <td><input type="radio" :name="'status' + index" value="pending" v-model="task.status"></td>
+        <td><input type="radio" :name="'status' + index" value="inProgress" v-model="task.status"></td>
+        <td><input type="radio" :name="'status' + index" value="done" v-model="task.status"></td>
+        <td><button @click="removeTask(index)">Remove</button></td>
+      </tr>
+    </tbody>
+  </table>
 </template>
 
 <script>
 export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String
+name: 'HelloWorld',
+data() {
+  return {
+    tasks: [
+      { name: 'Finish To-Do List project', status: 'pending' },
+      { name: 'Sleep', status: 'pending' },
+      { name: 'Become a Fisherman', status: 'pending' }
+    ],
+    task: ''
   }
+},
+methods: {
+  addTask() {
+    if (this.task) {
+      this.tasks.push({ name: this.task, status: 'pending' });
+      this.task = '';
+    }
+  },
+  removeTask(index) {
+    this.tasks.splice(index, 1);
+  }
+}
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
+.container {
+margin: 0 25%;
+background-color: #f2f2f2;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
+
+.task-table {
+margin: 0 25%;
+width: 50%;
+border-collapse: collapse;
+background-color: #f2f2f2;
 }
-li {
-  display: inline-block;
-  margin: 0 10px;
+
+.task-table th,
+.task-table td {
+padding: 8px;
+border-bottom: 1px solid #ddd;
 }
-a {
-  color: #42b983;
+
+.task-table th {
+background-color: #f2f2f2;
+font-weight: bold;
+border: 1px solid #000000;
+}
+
+.task-table td {
+text-align: left;
+border: 1px solid #000000;
+}
+
+.task-table th.task-header {
+width: 100%;
+}
+
+.task-table th:not(.task-header) {
+width: 15%;
+}
+
+.in-liner {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 10px;
+margin: 0 10%;
+}
+
+.todo-list-title {
+padding-top: 10px;
+margin: 0;
+border-top: 2px solid #000000;
 }
 </style>
